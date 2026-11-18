@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduPedia AI - Ensiklopedia Digital Interaktif (LATIKA 2026)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+        <div class="container mx-auto max-w-6xl px-4 py-4 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 text-white w-10 h-10 rounded-xl flex items-center justify-center text-xl shadow-md shadow-indigo-600/20">
+                    <i class="fa-solid fa-book-atlas"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-xl tracking-tight text-slate-900">Edu<span class="text-indigo-600">Pedia</span></h1>
+                    <p class="text-[11px] text-slate-500 font-medium">Ensiklopedia Teknologi & Sains Digital</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <!-- Indikator Status Server Ubuntu -->
+                <span id="serverStatus" class="text-[11px] font-bold px-3 py-1.5 rounded-full bg-amber-100 text-amber-800 flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i> Menghubungkan Server...
+                </span>
+                <button onclick="openAddModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs md:text-sm font-bold px-4 py-2.5 rounded-xl shadow-sm transition flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i> Tambah Artikel
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero & Live Search Section -->
+    <header class="bg-gradient-to-br from-indigo-900 via-blue-900 to-slate-900 text-white py-12 px-4">
+        <div class="container mx-auto max-w-4xl text-center space-y-5">
+            <span class="inline-block bg-white/10 border border-white/20 text-indigo-200 text-xs font-semibold px-3.5 py-1 rounded-full">
+                ✨ Proyek Pelatihan TIK Bagi Murid (LATIKA) 2026
+            </span>
+            <h2 class="text-3xl md:text-4xl font-extrabold leading-tight">
+                Jelajahi Pengetahuan Digital dalam Satu Tempat
+            </h2>
+            <p class="text-sm md:text-base text-slate-300 max-w-2xl mx-auto">
+                Terhubung langsung dengan database server Ubuntu lokal untuk berbagi dan mencari materi seputar AI, Pemrograman, dan Sains.
+            </p>
+
+            <!-- Search Bar -->
+            <div class="max-w-2xl mx-auto relative pt-2">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-6 text-slate-400 text-lg"></i>
+                <input type="text" id="searchInput" onkeyup="filterArticles()" placeholder="Cari topik ensiklopedia (misal: Python, Ubuntu, AI, HTML)..." 
+                    class="w-full pl-12 pr-4 py-4 rounded-2xl bg-white text-slate-800 placeholder-slate-400 shadow-xl focus:ring-4 focus:ring-indigo-500/40 outline-none text-sm md:text-base font-medium">
+            </div>
+        </div>
+    </header>
+
+    <!-- Filter Kategori -->
+    <section class="container mx-auto max-w-6xl px-4 pt-8 pb-4">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+            <div id="categoryFilters" class="flex flex-wrap gap-2">
+                <button onclick="setCategory('Semua')" class="cat-btn active bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm">Semua Topik</button>
+                <button onclick="setCategory('Kecerdasan Artifisial')" class="cat-btn bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold transition">Kecerdasan Artifisial</button>
+                <button onclick="setCategory('Pemrograman')" class="cat-btn bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold transition">Pemrograman</button>
+                <button onclick="setCategory('Server & Jaringan')" class="cat-btn bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold transition">Server & Jaringan</button>
+                <button onclick="setCategory('Sains & Umum')" class="cat-btn bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold transition">Sains & Umum</button>
+            </div>
+            <p class="text-xs text-slate-500 font-medium">Menampilkan <span id="articleCount" class="font-bold text-slate-800">0</span> artikel</p>
+        </div>
+    </section>
+
+    <!-- Daftar Kartu Artikel Ensiklopedia -->
+    <main class="flex-1 container mx-auto max-w-6xl px-4 py-4 pb-12">
+        <div id="articlesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Kartu artikel di-render otomatis oleh JavaScript -->
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 px-4 text-center text-xs text-slate-500">
+        <p class="font-semibold text-slate-700 mb-1">EduPedia Digital - Arsitektur Hybrid (GitHub Pages + Ubuntu LEMP Server)</p>
+        <p>Dikembangkan untuk Pelatihan TIK Bagi Murid (LATIKA) Provinsi Jawa Timur Tahun 2026.</p>
+    </footer>
+
+    <!-- ==================== MODAL BACA ARTIKEL LENGKAP ==================== -->
+    <div id="readModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+            <div class="p-6 border-b border-slate-100 flex items-start justify-between gap-4 bg-slate-50">
+                <div>
+                    <span id="modalCategory" class="inline-block bg-indigo-100 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full mb-2">Kategori</span>
+                    <h3 id="modalTitle" class="text-xl md:text-2xl font-extrabold text-slate-900">Judul Artikel</h3>
+                    <p id="modalMeta" class="text-xs text-slate-500 mt-1">Penulis • Tanggal</p>
+                </div>
+                <button onclick="closeReadModal()" class="w-8 h-8 rounded-lg bg-white border border-slate-200 text-slate-500 hover:text-rose-600 flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-4 text-sm md:text-base text-slate-700 leading-relaxed" id="modalContent"></div>
+            <div class="p-4 border-t border-slate-100 bg-slate-50 flex justify-end">
+                <button onclick="closeReadModal()" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-5 py-2.5 rounded-xl transition">
+                    Tutup Artikel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL TAMBAH ARTIKEL BARU ==================== -->
+    <div id="addModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl">
+            <div class="flex items-center justify-between border-b pb-3 mb-4">
+                <h3 class="font-extrabold text-lg text-slate-800"><i class="fa-solid fa-pen-to-square text-indigo-600 mr-1.5"></i> Kontribusi Artikel ke Database</h3>
+                <button onclick="closeAddModal()" class="text-slate-400 hover:text-slate-700"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <form id="addArticleForm" class="space-y-4 text-sm">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Judul Topik / Entri Ensiklopedia</label>
+                    <input type="text" id="inTitle" required placeholder="Contoh: Pengenalan Machine Learning" class="w-full px-3.5 py-2.5 border rounded-xl outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Kategori</label>
+                        <select id="inCategory" class="w-full px-3 py-2.5 border rounded-xl outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="Kecerdasan Artifisial">Kecerdasan Artifisial</option>
+                            <option value="Pemrograman">Pemrograman</option>
+                            <option value="Server & Jaringan">Server & Jaringan</option>
+                            <option value="Sains & Umum">Sains & Umum</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Nama Kontributor</label>
+                        <input type="text" id="inAuthor" required placeholder="Nama kamu..." class="w-full px-3.5 py-2.5 border rounded-xl outline-none focus:ring-2 focus:ring-indigo-500">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Ringkasan Singkat</label>
+                    <input type="text" id="inSummary" required placeholder="1-2 kalimat ringkasan topik..." class="w-full px-3.5 py-2.5 border rounded-xl outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Isi Artikel Lengkap</label>
+                    <textarea id="inBody" rows="4" required placeholder="Tulis penjelasan lengkap ensiklopedia di sini..." class="w-full p-3.5 border rounded-xl outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeAddModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-bold text-xs">Batal</button>
+                    <button type="submit" id="btnSubmitArticle" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md">
+                        Simpan ke Server MySQL
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== JAVASCRIPT (TERHUBUNG KE API.PHP UBUNTU) ==================== -->
+    <script>
+        // =========================================================================
+        // GANTI LINK DI BAWAH INI DENGAN URL CLOUDFLARE TUNNEL DARI PC UBUNTU KAMU
+        // Contoh: "https://nama-tunnel-kamu.trycloudflare.com/api.php"
+        // (Jika diuji lokal di PC Ubuntu, bisa diisi "http://localhost/api.php")
+        // =========================================================================
+        const API_URL = "https://capability-jim-valve-twist.trycloudflare.com ";
+
+        // Data Cadangan Lokal (Otomatis muncul jika PC Ubuntu / Tunnel sedang offline)
+        const fallbackArticles = [
+            {
+                id: 1,
+                title: "Kecerdasan Artifisial Generatif (Generative AI)",
+                category: "Kecerdasan Artifisial",
+                author: "Tim EduPedia",
+                date: "18 November 2026",
+                summary: "Teknologi AI yang mampu menciptakan konten baru seperti teks, kode program, dan gambar berdasarkan pola data pelatihan.",
+                body: "Kecerdasan Artifisial Generatif (Generative AI) berperan sebagai asisten cerdas (co-pilot) untuk merancang kerangka kode (scaffolding) dan memperbaiki bug (debugging)."
+            },
+            {
+                id: 2,
+                title: "Arsitektur LEMP Stack pada Ubuntu 22.04 LTS",
+                category: "Server & Jaringan",
+                author: "Tim EduPedia",
+                date: "18 November 2026",
+                summary: "Kombinasi Linux, Nginx, MySQL, dan PHP untuk membangun server API yang ringan, cepat, dan andal.",
+                body: "LEMP Stack memisahkan antarmuka frontend (seperti GitHub Pages) dengan penyimpanan database MySQL di server Ubuntu lokal melalui komunikasi REST API berformat JSON."
+            }
+        ];
+
+        let articles = [];
+        let currentCategory = 'Semua';
+
+        // 1. MENGAMBIL DATA ARTIKEL DARI SERVER UBUNTU (GET)
+        async function fetchArticlesFromServer() {
+            const statusBadge = document.getElementById('serverStatus');
+            try {
+                const response = await fetch(API_URL, { method: 'GET' });
+                if (!response.ok) throw new Error("Server tidak merespons");
+                
+                const data = await response.json();
+                articles = data;
+                
+                statusBadge.className = "text-[11px] font-bold px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-700 flex items-center gap-1.5";
+                statusBadge.innerHTML = `<i class="fa-solid fa-circle text-[8px] text-emerald-500"></i> Server MySQL Aktif`;
+            } catch (error) {
+                console.warn("Server Ubuntu offline/belum diset, beralih ke mode cadangan lokal:", error);
+                articles = JSON.parse(localStorage.getItem('edupedia_backup')) || fallbackArticles;
+                
+                statusBadge.className = "text-[11px] font-bold px-3 py-1.5 rounded-full bg-slate-200 text-slate-700 flex items-center gap-1.5";
+                statusBadge.innerHTML = `<i class="fa-solid fa-database text-[10px]"></i> Mode Offline (Cadangan)`;
+            }
+            filterArticles();
+        }
+
+        // Render Daftar Artikel ke Layar
+        function renderArticles(dataList) {
+            const grid = document.getElementById('articlesGrid');
+            document.getElementById('articleCount').textContent = dataList.length;
+            grid.innerHTML = '';
+
+            if (dataList.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-12 bg-white rounded-2xl border border-slate-200">
+                        <i class="fa-regular fa-folder-open text-4xl text-slate-300 mb-3"></i>
+                        <p class="text-slate-500 font-medium">Tidak ada artikel ensiklopedia yang cocok dengan pencarianmu.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            dataList.forEach(art => {
+                const card = document.createElement('article');
+                card.className = "bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md hover:border-indigo-300 transition flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <span class="bg-indigo-50 text-indigo-700 text-[11px] font-bold px-2.5 py-1 rounded-lg">${art.category}</span>
+                            <span class="text-[11px] text-slate-400">${art.date || 'Baru saja'}</span>
+                        </div>
+                        <h3 class="font-extrabold text-lg text-slate-900 mb-2 leading-snug">${art.title}</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-4 line-clamp-3">${art.summary}</p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <span class="text-[11px] text-slate-500 font-medium"><i class="fa-solid fa-user-pen mr-1 text-indigo-500"></i> ${art.author}</span>
+                        <button onclick="openReadModal(${art.id})" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
+                            Baca Selengkapnya <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Filter Kategori & Live Search
+        function filterArticles() {
+            const keyword = document.getElementById('searchInput').value.toLowerCase().trim();
+            const filtered = articles.filter(art => {
+                const matchCat = currentCategory === 'Semua' || art.category === currentCategory;
+                const matchKey = art.title.toLowerCase().includes(keyword) || 
+                                 art.summary.toLowerCase().includes(keyword) || 
+                                 art.body.toLowerCase().includes(keyword);
+                return matchCat && matchKey;
+            });
+            renderArticles(filtered);
+        }
+
+        function setCategory(cat) {
+            currentCategory = cat;
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                if (btn.textContent === cat || (cat === 'Semua' && btn.textContent === 'Semua Topik')) {
+                    btn.className = "cat-btn active bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm";
+                } else {
+                    btn.className = "cat-btn bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 px-4 py-2 rounded-xl text-xs font-bold transition";
+                }
+            });
+            filterArticles();
+        }
+
+        // Modal Baca Detail
+        function openReadModal(id) {
+            const art = articles.find(a => a.id == id);
+            if (!art) return;
+
+            document.getElementById('modalCategory').textContent = art.category;
+            document.getElementById('modalTitle').textContent = art.title;
+            document.getElementById('modalMeta').textContent = `Ditulis oleh ${art.author} • ${art.date || 'Hari ini'}`;
+            
+            const contentDiv = document.getElementById('modalContent');
+            contentDiv.innerHTML = art.body.split('\n\n').map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
+
+            document.getElementById('readModal').classList.remove('hidden');
+        }
+
+        function closeReadModal() {
+            document.getElementById('readModal').classList.add('hidden');
+        }
+
+        function openAddModal() {
+            document.getElementById('addModal').classList.remove('hidden');
+        }
+
+        function closeAddModal() {
+            document.getElementById('addModal').classList.add('hidden');
+        }
+
+        // 2. MENGIRIM ARTIKEL BARU KE SERVER UBUNTU (POST)
+        document.getElementById('addArticleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btnSubmit = document.getElementById('btnSubmitArticle');
+            btnSubmit.disabled = true;
+            btnSubmit.textContent = "Menyimpan ke Server...";
+
+            const payload = {
+                title: document.getElementById('inTitle').value.trim(),
+                category: document.getElementById('inCategory').value,
+                author: document.getElementById('inAuthor').value.trim(),
+                summary: document.getElementById('inSummary').value.trim(),
+                body: document.getElementById('inBody').value.trim()
+            };
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                if (response.ok && result.status === 'success') {
+                    alert("✅ Berhasil! Artikel sudah tersimpan permanen di database MySQL PC Ubuntu.");
+                    e.target.reset();
+                    closeAddModal();
+                    fetchArticlesFromServer(); // Muat ulang daftar dari MySQL
+                } else {
+                    throw new Error(result.message || "Gagal menyimpan ke server");
+                }
+            } catch (error) {
+                alert("⚠️ Server Ubuntu sedang tidak terjangkau. Artikel disimpan sementara di browser lokal.");
+                payload.id = Date.now();
+                payload.date = "Baru saja (Lokal)";
+                articles.unshift(payload);
+                localStorage.setItem('edupedia_backup', JSON.stringify(articles));
+                e.target.reset();
+                closeAddModal();
+                filterArticles();
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.textContent = "Simpan ke Server MySQL";
+            }
+        });
+
+        // Jalankan saat halaman pertama kali dibuka
+        fetchArticlesFromServer();
+    </script>
+</body>
+</html>
